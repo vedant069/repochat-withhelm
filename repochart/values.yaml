@@ -1,0 +1,148 @@
+# Frontend Configuration
+frontend:
+  replicaCount: 1
+  image:
+    repository: 135808924529.dkr.ecr.ap-south-1.amazonaws.com/ved7ntnadhe/repochat-frontend
+    pullPolicy: Always
+    tag: latest
+  service:
+    type: LoadBalancer  # Change from NodePort to LoadBalancer
+    port: 5173
+  ports:
+    http: 5173
+  resources: {}
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 5173
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 5173
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# Backend Configuration
+backend:
+  replicaCount: 1
+  image:
+    repository: 135808924529.dkr.ecr.ap-south-1.amazonaws.com/ved7ntnadhe/repochat-backend
+    pullPolicy: Always
+    tag: latest
+  service:
+    type: LoadBalancer  # Change from NodePort to LoadBalancer
+    port: 5000
+  ports:
+    http: 5000
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 5000
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 5000
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# Global Settings
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# Service Account Configuration
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+# Pod Annotations and Labels
+podAnnotations: {}
+podLabels: {}
+
+# Security Contexts
+podSecurityContext:
+  # fsGroup: 2000
+
+securityContext:
+  # capabilities:
+  #   drop:
+  #     - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# Service Configuration (Global)
+service:
+  type: LoadBalancer  # Change from NodePort to LoadBalancer
+  port: 80
+
+# Ingress Configuration
+ingress:
+  enabled: false  # Set to true if you want to use ingress
+  className: "nginx" # (optional) Specify your ingress controller class
+  annotations: {}    # (optional) Add any specific annotations if needed
+  tls: []            # (optional) TLS configuration for secure connections
+  hosts:
+    - host: frontend.example.com  # Set the hostname for frontend
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: backend.example.com   # Set the hostname for backend
+      paths:
+        - path: /api
+          pathType: Prefix
+
+# Resources Configuration
+resources: {}
+  # Uncomment and set resource limits and requests as needed
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# Liveness and Readiness Probes
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+# Autoscaling Configuration
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Additional Volumes
+volumes: []
+  # - name: foo
+  #   secret:
+  #     secretName: mysecret
+  #     optional: false
+
+# Additional Volume Mounts
+volumeMounts: []
+  # - name: foo
+  #   mountPath: "/etc/foo"
+  #   readOnly: true
+
+# Node Selector, Tolerations, and Affinity
+nodeSelector: {}
+tolerations: []
+affinity: {}

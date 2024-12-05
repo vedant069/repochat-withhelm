@@ -1,0 +1,11 @@
+flask==3.0.2
+flask-cors==4.0.0
+gitpython==3.1.42
+chromadb==0.4.24
+sentence-transformers==2.5.1
+ollama==0.1.7
+PyPDF2==3.0.1
+numpy==1.26.4
+python-git
+gunicorn==20.1.0
+pathlib
